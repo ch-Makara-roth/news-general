@@ -1,4 +1,4 @@
-import Image from 'next/image';
+
 import type { Article } from '@/lib/types';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ExternalLink, CalendarDays, UserCircle, NewspaperIcon } from 'lucide-react';
