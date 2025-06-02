@@ -21,6 +21,12 @@ const nextConfig: NextConfig = {
         hostname: 'variety.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'static.politico.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
