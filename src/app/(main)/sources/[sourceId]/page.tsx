@@ -1,8 +1,10 @@
 
 import type { Metadata, ResolvingMetadata } from 'next';
+import { Suspense } from 'react';
 import { SOURCES } from '@/constants';
 import SourcePageClientContent from '@/components/page/SourcePageClientContent';
-import { getSourceNews } from '@/actions/newsActions'; // Import the action
+import { getSourceNews } from '@/actions/newsActions';
+import SourcePageSkeleton from '@/components/skeletons/SourcePageSkeleton';
 
 type SourcePageProps = {
   params: { sourceId: string };
@@ -23,7 +25,7 @@ export async function generateMetadata(
   const canonicalUrl = `/sources/${sourceId}`;
 
   try {
-    const newsResponse = await getSourceNews(sourceId, 1, 2); // Fetch 2 articles for metadata
+    const newsResponse = await getSourceNews(sourceId, 1, 2);
     if (newsResponse.status === 'ok' && newsResponse.articles && newsResponse.articles.length > 0) {
       const firstArticle = newsResponse.articles[0];
       pageDescription = `Get the latest news from ${sourceName}, featuring articles like "${firstArticle.title}". Stay informed with NewsFlash.`;
@@ -54,14 +56,14 @@ export async function generateMetadata(
           height: 630,
           alt: pageTitle,
         },
-        ...previousImages.filter(img => img.url !== ogImageUrl),
+        ...previousImages.filter(img => typeof img === 'string' ? img !== ogImageUrl : img.url !== ogImageUrl),
       ] : previousImages,
     },
     twitter: {
       card: 'summary_large_image',
       title: pageTitle,
       description: pageDescription,
-      images: ogImageUrl ? [ogImageUrl] : previousImages.map(img => img.url as string),
+      images: ogImageUrl ? [ogImageUrl] : previousImages.map(img => typeof img === 'string' ? img : (img.url as string)),
     },
   };
 }
@@ -69,5 +71,9 @@ export async function generateMetadata(
 export default function SourcePage({ params }: { params: { sourceId: string } }) {
   const { sourceId } = params;
 
-  return <SourcePageClientContent sourceId={sourceId} />;
+  return (
+    <Suspense fallback={<SourcePageSkeleton />}>
+      <SourcePageClientContent sourceId={sourceId} />
+    </Suspense>
+  );
 }

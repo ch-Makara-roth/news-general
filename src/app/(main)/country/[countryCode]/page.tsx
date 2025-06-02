@@ -3,8 +3,8 @@ import { Suspense } from 'react';
 import type { Metadata, ResolvingMetadata } from 'next';
 import { getTopHeadlines } from '@/actions/newsActions';
 import { COUNTRIES } from '@/constants';
-import NewsSkeleton from '@/components/news/NewsSkeleton';
-import CountryHeadlinesClientPage from '@/components/page/CountryHeadlinesClientPage'; // Import the new client component
+import CountryHeadlinesClientPage from '@/components/page/CountryHeadlinesClientPage';
+import HomePageSkeleton from '@/components/skeletons/HomePageSkeleton'; // Updated to use HomePageSkeleton
 
 type CountryHeadlinesPageProps = {
   params: { countryCode: string };
@@ -25,7 +25,7 @@ export async function generateMetadata(
   const canonicalUrl = `/country/${countryCode}`;
 
   try {
-    const newsResponse = await getTopHeadlines(countryCode, 1, 2); 
+    const newsResponse = await getTopHeadlines(countryCode, 1, 2);
     if (newsResponse.status === 'ok' && newsResponse.articles && newsResponse.articles.length > 0) {
       const firstArticle = newsResponse.articles[0];
       pageDescription = `Breaking news from ${countryName}: "${firstArticle.title}" and more top stories on NewsFlash.`;
@@ -56,22 +56,21 @@ export async function generateMetadata(
           height: 630,
           alt: pageTitle,
         },
-        ...previousImages.filter(img => img.url !== ogImageUrl),
+        ...previousImages.filter(img => typeof img === 'string' ? img !== ogImageUrl : img.url !== ogImageUrl),
       ] : previousImages,
     },
     twitter: {
       card: 'summary_large_image',
       title: pageTitle,
       description: pageDescription,
-      images: ogImageUrl ? [ogImageUrl] : previousImages.map(img => img.url as string),
+      images: ogImageUrl ? [ogImageUrl] : previousImages.map(img => typeof img === 'string' ? img : (img.url as string)),
     },
   };
 }
 
-// This is the Page Server Component
 export default function CountryHeadlinesPageWrapper({ params, searchParams }: CountryHeadlinesPageProps) {
   return (
-    <Suspense fallback={<NewsSkeleton />}>
+    <Suspense fallback={<HomePageSkeleton />}> {/* Updated to use HomePageSkeleton */}
       <CountryHeadlinesClientPage />
     </Suspense>
   );

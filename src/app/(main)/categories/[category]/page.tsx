@@ -1,11 +1,11 @@
 
 import type { Metadata, ResolvingMetadata } from 'next';
-import { CATEGORIES }
-from '@/constants';
+import { Suspense } from 'react';
+import { CATEGORIES } from '@/constants';
 import CategoryPageClientContent from '@/components/page/CategoryPageClientContent';
-import { getCategoryNews } from '@/actions/newsActions'; // Import the action
+import { getCategoryNews } from '@/actions/newsActions';
+import CategoryPageSkeleton from '@/components/skeletons/CategoryPageSkeleton';
 
-// Props type for generateMetadata
 type CategoryPageMetadataProps = {
   params: { category: string };
   searchParams: { [key: string]: string | string[] | undefined };
@@ -25,7 +25,7 @@ export async function generateMetadata(
   const canonicalUrl = `/categories/${categoryId}`;
 
   try {
-    const newsResponse = await getCategoryNews(categoryId, "us", 1, 2); // Fetch 2 articles for metadata
+    const newsResponse = await getCategoryNews(categoryId, "us", 1, 2);
     if (newsResponse.status === 'ok' && newsResponse.articles && newsResponse.articles.length > 0) {
       const firstArticle = newsResponse.articles[0];
       pageDescription = `Discover the latest ${categoryName.toLowerCase()} news, including headlines like "${firstArticle.title}". Stay updated with NewsFlash.`;
@@ -35,7 +35,6 @@ export async function generateMetadata(
     }
   } catch (error) {
     console.error(`Error fetching news for category ${categoryId} metadata:`, error);
-    // Fallback to default description/image if API call fails
   }
 
   const previousImages = (await parent).openGraph?.images || [];
@@ -57,21 +56,24 @@ export async function generateMetadata(
           height: 630,
           alt: pageTitle,
         },
-        ...previousImages.filter(img => img.url !== ogImageUrl), // Avoid duplicate, keep others
+        ...previousImages.filter(img => typeof img === 'string' ? img !== ogImageUrl : img.url !== ogImageUrl),
       ] : previousImages,
     },
     twitter: {
       card: 'summary_large_image',
       title: pageTitle,
       description: pageDescription,
-      images: ogImageUrl ? [ogImageUrl] : previousImages.map(img => img.url as string),
+      images: ogImageUrl ? [ogImageUrl] : previousImages.map(img => typeof img === 'string' ? img : (img.url as string)),
     },
   };
 }
 
-// This is the Server Component for the category page
 export default function CategoryPage({ params }: { params: { category: string } }) {
   const { category } = params;
 
-  return <CategoryPageClientContent category={category} />;
+  return (
+    <Suspense fallback={<CategoryPageSkeleton />}>
+      <CategoryPageClientContent category={category} />
+    </Suspense>
+  );
 }
