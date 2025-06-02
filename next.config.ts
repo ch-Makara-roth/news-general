@@ -64,6 +64,12 @@ const nextConfig: NextConfig = {
         hostname: 'splnhub.cbsistatic.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 's.yimg.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
