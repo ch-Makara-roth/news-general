@@ -4,6 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { ExternalLink, CalendarDays, UserCircle, NewspaperIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MoreLikeThisButton } from './MoreLikeThisButton'; // We'll create this next
+import Image from 'next/image';
 
 interface NewsCardProps {
   article: Article;
