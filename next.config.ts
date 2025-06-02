@@ -40,6 +40,12 @@ const nextConfig: NextConfig = {
         hostname: 'www.ncaa.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'wlos.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
