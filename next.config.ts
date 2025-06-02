@@ -34,6 +34,12 @@ const nextConfig: NextConfig = {
         hostname: 'ichef.bbci.co.uk',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.ncaa.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
