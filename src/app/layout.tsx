@@ -1,11 +1,57 @@
+
 import type {Metadata} from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from "@/components/theme-provider";
 
+const siteName = 'NewsFlash';
+const siteDescription = 'Stay updated with the latest news from around the world with NewsFlash.';
+const siteUrl = 'https://newsflash.example.com'; // Replace with your production domain
+const ogImageUrl = `${siteUrl}/og-image.png`; // Replace with your actual default OG image URL or use a placeholder like 'https://placehold.co/1200x630.png'
+
 export const metadata: Metadata = {
-  title: 'NewsFlash - Your Daily News',
-  description: 'Stay updated with the latest news from around the world with NewsFlash.',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: `${siteName} - Your Daily News`,
+    template: `%s - ${siteName}`,
+  },
+  description: siteDescription,
+  openGraph: {
+    title: {
+      default: `${siteName} - Your Daily News`,
+      template: `%s - ${siteName}`,
+    },
+    description: siteDescription,
+    url: '/',
+    siteName: siteName,
+    images: [
+      {
+        url: ogImageUrl, // Generic placeholder, ensure this image exists or use a service
+        width: 1200,
+        height: 630,
+        alt: `${siteName} - Your Daily News`,
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: {
+      default: `${siteName} - Your Daily News`,
+      template: `%s - ${siteName}`,
+    },
+    description: siteDescription,
+    images: [ogImageUrl],
+    // creator: '@yourtwitterhandle', // Optional: Add your Twitter handle
+  },
+  alternates: {
+    canonical: '/',
+  },
+  // icons: { // Example, if you have a favicon
+  //   icon: '/favicon.ico',
+  //   apple: '/apple-touch-icon.png',
+  // },
 };
 
 export default function RootLayout({

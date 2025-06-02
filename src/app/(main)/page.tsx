@@ -1,3 +1,4 @@
+
 // Using 'use client' for interactive elements like CountrySelector and AI modal trigger
 "use client"; 
 import { useState, useEffect, useRef } from 'react';
@@ -10,6 +11,46 @@ import PaginationControls from '@/components/PaginationControls';
 import MoreLikeThisModal, { type MoreLikeThisModalRef } from '@/components/news/MoreLikeThisModal';
 import { COUNTRIES } from '@/constants';
 import { useToast } from '@/hooks/use-toast';
+import type { Metadata } from 'next';
+
+// generateMetadata can be defined in a client component's page.tsx file
+// It will run on the server.
+export async function generateMetadata({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }): Promise<Metadata> {
+  const countryCode = searchParams?.country as string || COUNTRIES[0].code;
+  const country = COUNTRIES.find(c => c.code === countryCode);
+  const countryName = country ? country.name : "Worldwide";
+
+  const pageTitle = `Top Headlines from ${countryName} - NewsFlash`;
+  const pageDescription = `Discover the latest top news headlines from ${countryName}. Stay informed with NewsFlash.`;
+  const ogImageUrl = 'https://placehold.co/1200x630.png';
+
+  return {
+    title: pageTitle,
+    description: pageDescription,
+    alternates: {
+      canonical: countryCode === COUNTRIES[0].code ? '/' : `/?country=${countryCode}`,
+    },
+    openGraph: {
+      title: pageTitle,
+      description: pageDescription,
+      url: countryCode === COUNTRIES[0].code ? '/' : `/?country=${countryCode}`,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: pageTitle,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: pageTitle,
+      description: pageDescription,
+      images: [ogImageUrl],
+    },
+  };
+}
 
 
 const PAGE_SIZE = 12;
@@ -64,8 +105,6 @@ export default function HomePage() {
   const handleCountryChange = (countryCode: string) => {
     setSelectedCountry(countryCode);
     setCurrentPage(1); // Reset to first page on country change
-    // Update URL without full page reload (optional, Next.js 13+ handles this better with server components)
-    // For client components, you might use router.push or modify window.history
     const newUrl = `/?country=${countryCode}&page=1`;
     window.history.pushState({}, '', newUrl); 
   };
@@ -76,7 +115,7 @@ export default function HomePage() {
 
   return (
     <div>
-      <div className="mb-8 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-2">
+      <div className="mb-8 flex flex-col sm:flex-row justify-between items-center gap-4">
         <h2 className="text-3xl font-headline font-semibold mb-4 sm:mb-0">Top Headlines</h2>
         <CountrySelector selectedCountry={selectedCountry} onCountryChange={handleCountryChange} />
       </div>

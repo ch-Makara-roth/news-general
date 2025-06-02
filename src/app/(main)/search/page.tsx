@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, Suspense, useRef } from 'react';
@@ -8,6 +9,52 @@ import NewsList from '@/components/news/NewsList';
 import PaginationControls from '@/components/PaginationControls';
 import MoreLikeThisModal, { type MoreLikeThisModalRef } from '@/components/news/MoreLikeThisModal';
 import { useToast } from '@/hooks/use-toast';
+import type { Metadata, ResolvingMetadata } from 'next';
+import NewsSkeleton from '@/components/news/NewsSkeleton'; // Ensure NewsSkeleton is imported
+
+type SearchPageParentProps = {
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata(
+  { searchParams }: SearchPageParentProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const query = searchParams?.q as string || "";
+
+  const pageTitle = query ? `Search Results for "${query}"` : "Search News";
+  const pageDescription = query ? `Find news articles matching "${query}". NewsFlash helps you discover relevant information.` : "Search for news articles on NewsFlash.";
+  const ogImageUrl = 'https://placehold.co/1200x630.png';
+  const canonicalUrl = query ? `/search?q=${encodeURIComponent(query)}` : "/search";
+
+  return {
+    title: pageTitle,
+    description: pageDescription,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: pageTitle,
+      description: pageDescription,
+      url: canonicalUrl,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: pageTitle,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: pageTitle,
+      description: pageDescription,
+      images: [ogImageUrl],
+    },
+  };
+}
+
 
 const PAGE_SIZE = 12;
 

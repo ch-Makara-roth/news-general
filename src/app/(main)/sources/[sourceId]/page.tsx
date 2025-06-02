@@ -13,17 +13,60 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import type { Metadata, ResolvingMetadata } from 'next';
+
+type SourcePageProps = {
+  params: { sourceId: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata(
+  { params }: SourcePageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const sourceId = params.sourceId;
+  const source = SOURCES.find(s => s.id === sourceId);
+  const sourceName = source ? source.name : "News Source";
+
+  const pageTitle = `News from ${sourceName}`;
+  const pageDescription = `Read the latest articles and headlines from ${sourceName}. Your trusted source on NewsFlash.`;
+  const ogImageUrl = 'https://placehold.co/1200x630.png';
+  const canonicalUrl = `/sources/${sourceId}`;
+
+  return {
+    title: pageTitle,
+    description: pageDescription,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: pageTitle,
+      description: pageDescription,
+      url: canonicalUrl,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: pageTitle,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: pageTitle,
+      description: pageDescription,
+      images: [ogImageUrl],
+    },
+  };
+}
 
 const PAGE_SIZE = 12;
 
-interface SourcePageProps {
-  params: { sourceId: string };
-}
-
+// Props type defined above for generateMetadata is also used here
 export default function SourcePage({ params }: SourcePageProps) {
   const searchParams = useSearchParams();
-  // As per Next.js warning, params should be unwrapped with React.use in Client Components
-  const resolvedParams = use(params as Promise<{ sourceId: string }>);
+  const resolvedParams = use(params as Promise<{ sourceId: string }>); // Next.js recommendation
   const { sourceId } = resolvedParams;
 
   const initialPage = parseInt(searchParams.get('page') || '1', 10);

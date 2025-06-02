@@ -13,17 +13,60 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import type { Metadata, ResolvingMetadata } from 'next';
+
+type CategoryPageProps = {
+  params: { category: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata(
+  { params }: CategoryPageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const categoryId = params.category;
+  const category = CATEGORIES.find(cat => cat.id === categoryId);
+  const categoryName = category ? category.name : "News Category";
+
+  const pageTitle = `${categoryName} News`;
+  const pageDescription = `Explore the latest news articles in the ${categoryName.toLowerCase()} category. Stay informed with NewsFlash.`;
+  const ogImageUrl = 'https://placehold.co/1200x630.png';
+  const canonicalUrl = `/categories/${categoryId}`;
+
+  return {
+    title: pageTitle,
+    description: pageDescription,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: pageTitle,
+      description: pageDescription,
+      url: canonicalUrl,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: pageTitle,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: pageTitle,
+      description: pageDescription,
+      images: [ogImageUrl],
+    },
+  };
+}
 
 const PAGE_SIZE = 12;
 
-interface CategoryPageProps {
-  params: { category: string };
-}
-
+// Props type defined above for generateMetadata is also used here
 export default function CategoryPage({ params }: CategoryPageProps) {
   const searchParams = useSearchParams();
-  // As per Next.js warning, params should be unwrapped with React.use in Client Components
-  const resolvedParams = use(params as Promise<{ category: string }>);
+  const resolvedParams = use(params as Promise<{ category: string }>); // Next.js recommendation for client components
   const { category } = resolvedParams;
 
   const initialPage = parseInt(searchParams.get('page') || '1', 10);

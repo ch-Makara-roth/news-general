@@ -1,3 +1,4 @@
+
 "use client"; 
 
 import { useState, useEffect, useRef } from 'react';
@@ -10,6 +11,53 @@ import PaginationControls from '@/components/PaginationControls';
 import MoreLikeThisModal, { type MoreLikeThisModalRef } from '@/components/news/MoreLikeThisModal';
 import { COUNTRIES } from '@/constants';
 import { useToast } from '@/hooks/use-toast';
+import type { Metadata, ResolvingMetadata } from 'next';
+
+type CountryHeadlinesPageProps = {
+  params: { countryCode: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+};
+
+export async function generateMetadata(
+  { params }: CountryHeadlinesPageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const countryCode = params.countryCode;
+  const country = COUNTRIES.find(c => c.code === countryCode);
+  const countryName = country ? country.name : "Selected Region";
+
+  const pageTitle = `Top Headlines from ${countryName}`;
+  const pageDescription = `Get the latest top news headlines from ${countryName}. Stay updated with NewsFlash.`;
+  const ogImageUrl = 'https://placehold.co/1200x630.png';
+  const canonicalUrl = `/country/${countryCode}`;
+
+  return {
+    title: pageTitle,
+    description: pageDescription,
+    alternates: {
+      canonical: canonicalUrl,
+    },
+    openGraph: {
+      title: pageTitle,
+      description: pageDescription,
+      url: canonicalUrl,
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: pageTitle,
+        },
+      ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: pageTitle,
+      description: pageDescription,
+      images: [ogImageUrl],
+    },
+  };
+}
 
 
 const PAGE_SIZE = 12;
@@ -65,7 +113,6 @@ export default function CountryHeadlinesPage() {
   }, [selectedCountry, currentPage, toast]);
 
   const handleCountryChange = (countryCode: string) => {
-    // For a dedicated country page, we'd typically navigate
     window.location.href = `/country/${countryCode}`;
   };
 
@@ -77,7 +124,7 @@ export default function CountryHeadlinesPage() {
 
   return (
     <div>
-      <div className="mb-8 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-2">
+      <div className="mb-8 flex flex-col sm:flex-row justify-between items-center gap-4">
         <h2 className="text-3xl font-headline font-semibold mb-4 sm:mb-0">Top Headlines: {currentCountryName}</h2>
         <CountrySelector selectedCountry={selectedCountry} onCountryChange={handleCountryChange} />
       </div>
