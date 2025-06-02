@@ -58,6 +58,12 @@ const nextConfig: NextConfig = {
         hostname: 'www.hollywoodreporter.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'splnhub.cbsistatic.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
