@@ -70,6 +70,12 @@ const nextConfig: NextConfig = {
         hostname: 's.yimg.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.washingtonpost.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
