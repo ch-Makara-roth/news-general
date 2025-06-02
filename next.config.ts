@@ -52,6 +52,12 @@ const nextConfig: NextConfig = {
         hostname: 'ufc.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'www.hollywoodreporter.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
