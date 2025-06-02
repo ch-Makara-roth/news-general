@@ -80,7 +80,7 @@ export default function SourcePage({ params }: SourcePageProps) {
       </h2>
       
       <Tabs defaultValue={sourceId} className="mb-6">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-8 gap-2">
+        <TabsList className="grid w-full grid-cols-2 gap-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 sm:gap-2">
           {SOURCES.map((src) => (
             <Link href={`/sources/${src.id}`} key={src.id} passHref legacyBehavior>
               <TabsTrigger value={src.id} className="capitalize text-xs sm:text-sm p-2 h-auto">{src.name}</TabsTrigger>

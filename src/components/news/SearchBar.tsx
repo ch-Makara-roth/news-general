@@ -19,10 +19,10 @@ export default function SearchBar() {
   };
 
   return (
-    <form onSubmit={handleSearch} className="flex w-full max-w-sm items-center space-x-2">
+    <form onSubmit={handleSearch} className="flex w-full min-w-0 sm:max-w-xs md:max-w-sm items-center space-x-2">
       <Input
         type="search"
-        placeholder="Search news (e.g. Bitcoin)"
+        placeholder="Search news..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         className="h-10"

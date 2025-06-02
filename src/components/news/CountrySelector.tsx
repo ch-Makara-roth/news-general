@@ -17,7 +17,7 @@ interface CountrySelectorProps {
 export default function CountrySelector({ selectedCountry, onCountryChange }: CountrySelectorProps) {
   return (
     <Select value={selectedCountry} onValueChange={onCountryChange}>
-      <SelectTrigger className="w-[180px] mb-6">
+      <SelectTrigger className="w-full sm:w-[200px]">
         <SelectValue placeholder="Select Country" />
       </SelectTrigger>
       <SelectContent>

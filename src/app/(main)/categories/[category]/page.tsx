@@ -79,7 +79,7 @@ export default function CategoryPage({ params }: CategoryPageProps) {
       </h2>
 
       <Tabs defaultValue={category} className="mb-6">
-        <TabsList className="grid w-full grid-cols-3 sm:grid-cols-4 md:grid-cols-7">
+        <TabsList className="grid w-full grid-cols-2 gap-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 sm:gap-2">
           {CATEGORIES.map((cat) => (
             <Link href={`/categories/${cat.id}`} key={cat.id} passHref legacyBehavior>
               <TabsTrigger value={cat.id} className="capitalize">{cat.name}</TabsTrigger>

@@ -77,7 +77,7 @@ export default function CountryHeadlinesPage() {
 
   return (
     <div>
-      <div className="mb-8 flex flex-col sm:flex-row justify-between items-center">
+      <div className="mb-8 flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-2">
         <h2 className="text-3xl font-headline font-semibold mb-4 sm:mb-0">Top Headlines: {currentCountryName}</h2>
         <CountrySelector selectedCountry={selectedCountry} onCountryChange={handleCountryChange} />
       </div>
