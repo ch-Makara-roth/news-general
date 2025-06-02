@@ -46,6 +46,12 @@ const nextConfig: NextConfig = {
         hostname: 'wlos.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'ufc.com',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
