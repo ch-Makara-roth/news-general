@@ -25,13 +25,13 @@ export async function generateMetadata(
   const canonicalUrl = `/categories/${categoryId}`;
 
   try {
-    const newsResponse = await getCategoryNews(categoryId, "us", 1, 2);
-    if (newsResponse.status === 'ok' && newsResponse.articles && newsResponse.articles.length > 0) {
-      const firstArticle = newsResponse.articles[0];
-      pageDescription = `Discover the latest ${categoryName.toLowerCase()} news, including headlines like "${firstArticle.title}". Stay updated with NewsFlash.`;
-      if (firstArticle.urlToImage) {
-        ogImageUrl = firstArticle.urlToImage;
-      }
+      const newsResponse = await getCategoryNews(categoryId, "us", 1, 2);
+      if (newsResponse.status === 'ok' && newsResponse.articles && newsResponse.articles.length > 0) {
+        const firstArticle = newsResponse.articles[0];
+        pageDescription = `Discover the latest ${categoryName.toLowerCase()} news, including headlines like "${firstArticle.title}". Stay updated with NewsFlash.`;
+        if (firstArticle.urlToImage) {
+          ogImageUrl = firstArticle.urlToImage;
+        }
     }
   } catch (error) {
     console.error(`Error fetching news for category ${categoryId} metadata:`, error);
