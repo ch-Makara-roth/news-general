@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
@@ -11,6 +12,7 @@ import MoreLikeThisModal, { type MoreLikeThisModalRef } from '@/components/news/
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 const PAGE_SIZE = 12;
 
@@ -80,13 +82,16 @@ export default function SourcePage({ params }: SourcePageProps) {
       </h2>
       
       <Tabs defaultValue={sourceId} className="mb-6">
-        <TabsList className="grid w-full grid-cols-2 gap-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-7 sm:gap-2">
-          {SOURCES.map((src) => (
-            <Link href={`/sources/${src.id}`} key={src.id} passHref legacyBehavior>
-              <TabsTrigger value={src.id} className="capitalize text-xs sm:text-sm p-2 h-auto">{src.name}</TabsTrigger>
-            </Link>
-          ))}
-        </TabsList>
+        <ScrollArea className="w-full whitespace-nowrap">
+          <TabsList className="inline-flex gap-1 p-1">
+            {SOURCES.map((src) => (
+              <Link href={`/sources/${src.id}`} key={src.id} passHref legacyBehavior>
+                <TabsTrigger value={src.id} className="capitalize px-3 py-1.5 text-sm">{src.name}</TabsTrigger>
+              </Link>
+            ))}
+          </TabsList>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </Tabs>
 
       <NewsList response={newsResponse} loading={loading} moreLikeThisModalRef={moreLikeThisModalRef} />
