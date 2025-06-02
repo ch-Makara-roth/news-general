@@ -7,8 +7,8 @@ import Script from 'next/script'; // Import next/script
 
 const siteName = 'NewsFlash';
 const siteDescription = 'Stay updated with the latest news from around the world with NewsFlash.';
-const siteUrl = 'https://newsflash.example.com'; // Replace with your production domain
-const ogImageUrl = `${siteUrl}/og-image.png`; // Replace with your actual default OG image URL or use a placeholder like 'https://placehold.co/1200x630.png'
+const siteUrl = 'https://news-general.vercel.app'; // Updated site URL
+const ogImageUrl = `${siteUrl}/og-image.png`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     siteName: siteName,
     images: [
       {
-        url: ogImageUrl, // Generic placeholder, ensure this image exists or use a service
+        url: ogImageUrl,
         width: 1200,
         height: 630,
         alt: `${siteName} - Your Daily News`,
