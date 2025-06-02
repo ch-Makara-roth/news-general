@@ -76,6 +76,12 @@ const nextConfig: NextConfig = {
         hostname: 'www.washingtonpost.com',
         port: '',
         pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'assets.bwbx.io',
+        port: '',
+        pathname: '/**',
       }
     ],
   },
