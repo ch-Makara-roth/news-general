@@ -1,3 +1,4 @@
+
 "use server";
 
 import type { NewsApiResponse, FetchParams } from "@/lib/types";
@@ -68,7 +69,7 @@ export async function searchNews(
   if (!query) {
     return { status: "error", message: "Search query cannot be empty." };
   }
-  return fetchNews("everything", { q: query, sortBy: "popularity", page, pageSize });
+  return fetchNews("everything", { q: query, sortBy: "popularity", page, pageSize, from: "2025-06-02" });
 }
 
 export async function getSourceNews(
@@ -113,3 +114,4 @@ export async function getAIRelatedArticles(articleTitle: string, articleContent:
     };
   }
 }
+
