@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, use } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getSourceNews } from '@/actions/newsActions';
 import type { NewsApiResponse, Article } from '@/lib/types';
@@ -22,7 +22,10 @@ interface SourcePageProps {
 
 export default function SourcePage({ params }: SourcePageProps) {
   const searchParams = useSearchParams();
-  const { sourceId } = params;
+  // As per Next.js warning, params should be unwrapped with React.use in Client Components
+  const resolvedParams = use(params as Promise<{ sourceId: string }>);
+  const { sourceId } = resolvedParams;
+
   const initialPage = parseInt(searchParams.get('page') || '1', 10);
 
   const [currentPage, setCurrentPage] = useState(initialPage);

@@ -1,7 +1,7 @@
 
 "use client"; // For using hooks like useSearchParams and client-side state
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, use } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { getCategoryNews } from '@/actions/newsActions';
 import type { NewsApiResponse, Article } from '@/lib/types';
@@ -22,7 +22,10 @@ interface CategoryPageProps {
 
 export default function CategoryPage({ params }: CategoryPageProps) {
   const searchParams = useSearchParams();
-  const { category } = params;
+  // As per Next.js warning, params should be unwrapped with React.use in Client Components
+  const resolvedParams = use(params as Promise<{ category: string }>);
+  const { category } = resolvedParams;
+
   const initialPage = parseInt(searchParams.get('page') || '1', 10);
 
   const [currentPage, setCurrentPage] = useState(initialPage);
