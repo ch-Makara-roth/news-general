@@ -81,8 +81,8 @@ export default function CategoryPage({ params }: CategoryPageProps) {
       </h2>
 
       <Tabs defaultValue={category} className="mb-6">
-        <ScrollArea className="w-full whitespace-nowrap">
-          <TabsList className="inline-flex gap-1 p-1">
+        <ScrollArea className="w-full whitespace-nowrap rounded-md">
+          <TabsList className="inline-flex h-auto gap-2 p-2">
             {CATEGORIES.map((cat) => (
               <Link href={`/categories/${cat.id}`} key={cat.id} passHref legacyBehavior>
                 <TabsTrigger value={cat.id} className="capitalize px-3 py-1.5 text-sm">{cat.name}</TabsTrigger>

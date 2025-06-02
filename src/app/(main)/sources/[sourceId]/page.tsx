@@ -82,8 +82,8 @@ export default function SourcePage({ params }: SourcePageProps) {
       </h2>
       
       <Tabs defaultValue={sourceId} className="mb-6">
-        <ScrollArea className="w-full whitespace-nowrap">
-          <TabsList className="inline-flex gap-1 p-1">
+        <ScrollArea className="w-full whitespace-nowrap rounded-md">
+          <TabsList className="inline-flex h-auto gap-2 p-2">
             {SOURCES.map((src) => (
               <Link href={`/sources/${src.id}`} key={src.id} passHref legacyBehavior>
                 <TabsTrigger value={src.id} className="capitalize px-3 py-1.5 text-sm">{src.name}</TabsTrigger>

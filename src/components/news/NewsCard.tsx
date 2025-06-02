@@ -4,6 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { ExternalLink, CalendarDays, UserCircle, NewspaperIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { MoreLikeThisButton } from './MoreLikeThisButton';
+import Image from 'next/image';
 
 interface NewsCardProps {
   article: Article;
@@ -22,11 +23,14 @@ export default function NewsCard({ article, onFindRelated }: NewsCardProps) {
       <CardHeader className="p-0">
         {article.urlToImage ? (
           <div className="relative h-48 w-full">
-            <img
+            <Image
               src={article.urlToImage}
               alt={article.title}
-              className="object-cover w-full h-full"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="object-cover"
               data-ai-hint="news article"
+              priority={false} // Lazy load by default
               loading="lazy"
             />
           </div>
@@ -37,7 +41,7 @@ export default function NewsCard({ article, onFindRelated }: NewsCardProps) {
         )}
       </CardHeader>
       <CardContent className="flex-grow p-4">
-        <CardTitle className="mb-2 text-lg font-headline leading-tight">
+        <CardTitle className="mb-2 text-lg font-headline leading-tight line-clamp-2">
           {article.title}
         </CardTitle>
         <p className="mb-3 text-sm text-muted-foreground line-clamp-3">
