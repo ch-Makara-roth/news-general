@@ -3,9 +3,9 @@ import type { Article, NewsApiResponse } from '@/lib/types';
 import NewsCard from './NewsCard';
 import NewsSkeleton from './NewsSkeleton';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Terminal, Info } from "lucide-react"; // Added Info icon
+import { Terminal, Info } from "lucide-react"; 
 import type { MoreLikeThisModalRef } from './MoreLikeThisModal';
-import Link from 'next/link'; // Added Link import
+import Link from 'next/link'; 
 
 interface NewsListProps {
   response: NewsApiResponse | undefined;
@@ -70,6 +70,7 @@ export default function NewsList({ response, loading, moreLikeThisModalRef }: Ne
           key={`${article.url}-${index}`} 
           article={article} 
           onFindRelated={moreLikeThisModalRef ? handleFindRelated : undefined}
+          isPriority={index < 2} // Prioritize the first two images
         />
       ))}
     </div>

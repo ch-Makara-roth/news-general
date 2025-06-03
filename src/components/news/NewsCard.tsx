@@ -9,9 +9,10 @@ import Image from 'next/image';
 interface NewsCardProps {
   article: Article;
   onFindRelated?: (article: Article) => void;
+  isPriority?: boolean;
 }
 
-export default function NewsCard({ article, onFindRelated }: NewsCardProps) {
+export default function NewsCard({ article, onFindRelated, isPriority }: NewsCardProps) {
   const publishDate = new Date(article.publishedAt).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -25,13 +26,12 @@ export default function NewsCard({ article, onFindRelated }: NewsCardProps) {
           <div className="relative h-48 w-full">
             <Image
               src={article.urlToImage}
-              alt={article.title}
+              alt={article.title || 'News article image'}
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               className="object-cover"
               data-ai-hint="news article"
-              priority={false} // Lazy load by default
-              loading="lazy"
+              priority={isPriority || false}
             />
           </div>
         ) : (
