@@ -9,6 +9,8 @@ import NewsList from '@/components/news/NewsList';
 import PaginationControls from '@/components/PaginationControls';
 import MoreLikeThisModal, { type MoreLikeThisModalRef } from '@/components/news/MoreLikeThisModal';
 import { useToast } from '@/hooks/use-toast';
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { SearchIcon as SearchIconLucide, Terminal } from "lucide-react"; // Renamed to avoid conflict
 
 const PAGE_SIZE = 12;
 
@@ -31,6 +33,7 @@ export default function SearchPageComponent() {
   useEffect(() => {
     async function fetchData() {
       if (!query) {
+        // Set loading to false here, as we are not fetching
         setNewsResponse({ status: "ok", articles: [], totalResults: 0 });
         setLoading(false);
         return;
@@ -64,10 +67,27 @@ export default function SearchPageComponent() {
   const totalArticles = newsResponse?.totalResults || 0;
   const totalPages = Math.ceil(totalArticles / PAGE_SIZE);
 
+  if (!query && !loading) { // Show this message only if there's no query and not loading
+    return (
+      <div>
+        <h2 className="text-3xl font-headline font-semibold mb-6 flex items-center">
+          <SearchIconLucide className="w-8 h-8 mr-2 text-primary" /> Search News
+        </h2>
+        <Alert className="mt-8">
+          <Terminal className="h-4 w-4" />
+          <AlertTitle>Start Your News Discovery</AlertTitle>
+          <AlertDescription>
+            Please enter a topic, keyword, or name in the search bar above to find relevant news articles from across the globe.
+          </AlertDescription>
+        </Alert>
+      </div>
+    );
+  }
+
   return (
     <div>
       <h2 className="text-3xl font-headline font-semibold mb-6">
-        Search Results for: <span className="text-primary">{query}</span>
+        Search Results {query ? <>for: <span className="text-primary">{query}</span></> : ""}
       </h2>
       
       <NewsList response={newsResponse} loading={loading} moreLikeThisModalRef={moreLikeThisModalRef}/>

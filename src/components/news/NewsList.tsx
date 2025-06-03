@@ -1,14 +1,16 @@
+
 import type { Article, NewsApiResponse } from '@/lib/types';
 import NewsCard from './NewsCard';
 import NewsSkeleton from './NewsSkeleton';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Terminal } from "lucide-react";
-import type { MoreLikeThisModalRef } from './MoreLikeThisModal'; // Import ref type
+import { Terminal, Info } from "lucide-react"; // Added Info icon
+import type { MoreLikeThisModalRef } from './MoreLikeThisModal';
+import Link from 'next/link'; // Added Link import
 
 interface NewsListProps {
   response: NewsApiResponse | undefined;
   loading: boolean;
-  moreLikeThisModalRef?: React.RefObject<MoreLikeThisModalRef>; // Add this prop
+  moreLikeThisModalRef?: React.RefObject<MoreLikeThisModalRef>;
 }
 
 export default function NewsList({ response, loading, moreLikeThisModalRef }: NewsListProps) {
@@ -28,7 +30,11 @@ export default function NewsList({ response, loading, moreLikeThisModalRef }: Ne
         <Terminal className="h-4 w-4" />
         <AlertTitle>Error Fetching News</AlertTitle>
         <AlertDescription>
-          {response?.message || "An unexpected error occurred. Please try again later."}
+          {response?.message || "An unexpected error occurred."} Please try again in a few moments.
+          If the issue persists, you can try exploring other sections or visit our{' '}
+          <Link href="/" className="font-semibold underline hover:text-destructive-foreground/80">
+            homepage
+          </Link> for the latest updates.
         </AlertDescription>
       </Alert>
     );
@@ -37,10 +43,14 @@ export default function NewsList({ response, loading, moreLikeThisModalRef }: Ne
   if (response.articles.length === 0) {
     return (
       <Alert className="mt-8">
-        <Terminal className="h-4 w-4" />
+        <Info className="h-4 w-4" />
         <AlertTitle>No Articles Found</AlertTitle>
         <AlertDescription>
-          There are no articles matching your current criteria. Try adjusting your search or filters.
+          We couldn't find any articles matching your current selection.
+          Please try a different search, category, or source. You can also check out our{' '}
+          <Link href="/" className="font-semibold underline hover:text-foreground/80">
+            homepage
+          </Link> for the latest headlines.
         </AlertDescription>
       </Alert>
     );
