@@ -10,7 +10,8 @@ import PaginationControls from '@/components/PaginationControls';
 import MoreLikeThisModal, { type MoreLikeThisModalRef } from '@/components/news/MoreLikeThisModal';
 import { useToast } from '@/hooks/use-toast';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { SearchIcon as SearchIconLucide, Terminal } from "lucide-react"; // Renamed to avoid conflict
+import { SearchIcon as SearchIconLucide } from "lucide-react"; 
+import Link from 'next/link';
 
 const PAGE_SIZE = 12;
 
@@ -74,10 +75,11 @@ export default function SearchPageComponent() {
           <SearchIconLucide className="w-8 h-8 mr-2 text-primary" /> Search News
         </h2>
         <Alert className="mt-8">
-          <Terminal className="h-4 w-4" />
-          <AlertTitle>Start Your News Discovery</AlertTitle>
+          <SearchIconLucide className="h-4 w-4" /> {/* Changed icon */}
+          <AlertTitle>Discover News Articles</AlertTitle>
           <AlertDescription>
-            Please enter a topic, keyword, or name in the search bar above to find relevant news articles from across the globe.
+            Enter a keyword or topic in the search bar above to find specific news.
+            Alternatively, you can <Link href="/" className="font-semibold underline hover:text-foreground/80">explore top headlines</Link> or browse by <Link href="/categories/general" className="font-semibold underline hover:text-foreground/80">popular categories</Link>.
           </AlertDescription>
         </Alert>
       </div>
@@ -104,3 +106,4 @@ export default function SearchPageComponent() {
     </div>
   );
 }
+

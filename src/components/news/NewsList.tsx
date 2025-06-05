@@ -3,7 +3,7 @@ import type { Article, NewsApiResponse } from '@/lib/types';
 import NewsCard from './NewsCard';
 import NewsSkeleton from './NewsSkeleton';
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Terminal, Info } from "lucide-react"; 
+import { Terminal, Info, SearchCheck } from "lucide-react"; 
 import type { MoreLikeThisModalRef } from './MoreLikeThisModal';
 import Link from 'next/link'; 
 
@@ -43,14 +43,15 @@ export default function NewsList({ response, loading, moreLikeThisModalRef }: Ne
   if (response.articles.length === 0) {
     return (
       <Alert className="mt-8">
-        <Info className="h-4 w-4" />
+        <SearchCheck className="h-4 w-4" /> {/* Changed icon */}
         <AlertTitle>No Articles Found</AlertTitle>
         <AlertDescription>
-          We couldn't find any articles matching your current selection.
-          Please try a different search, category, or source. You can also check out our{' '}
-          <Link href="/" className="font-semibold underline hover:text-foreground/80">
-            homepage
-          </Link> for the latest headlines.
+          No articles match your current selection. Why not try:
+          <ul className="list-disc pl-5 mt-2 space-y-1">
+            <li>Adjusting your search terms or filters?</li>
+            <li>Exploring <Link href="/categories/general" className="font-semibold underline hover:text-foreground/80">different categories</Link>?</li>
+            <li>Checking the <Link href="/" className="font-semibold underline hover:text-foreground/80">latest top headlines</Link>?</li>
+          </ul>
         </AlertDescription>
       </Alert>
     );
@@ -76,3 +77,4 @@ export default function NewsList({ response, loading, moreLikeThisModalRef }: Ne
     </div>
   );
 }
+
