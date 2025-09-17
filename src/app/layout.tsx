@@ -4,6 +4,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from "@/components/theme-provider";
 import Script from 'next/script'; // Import next/script
+import { Analytics } from '@vercel/analytics/react';
 
 const siteName = 'NewsFlash';
 const siteDescription = 'Stay updated with the latest news from around the world with NewsFlash.';
@@ -90,6 +91,7 @@ export default function RootLayout({
           {children}
           <Toaster />
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );

@@ -3,6 +3,7 @@ import { Suspense } from 'react';
 import type { Metadata, ResolvingMetadata } from 'next';
 import NewsSkeleton from '@/components/news/NewsSkeleton';
 import SearchPageComponent from '@/components/page/SearchPageComponent'; // Import the new client component
+import { searchNews } from '@/actions/newsActions';
 
 type SearchPageParentProps = {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -15,11 +16,24 @@ export async function generateMetadata(
   const query = searchParams?.q as string || "";
 
   const pageTitle = query ? `Search Results for "${query}"` : "Search News";
-  const pageDescription = query ? `Find news articles matching "${query}". NewsFlash helps you discover relevant information.` : "Search for news articles on NewsFlash.";
-  const ogImageUrl = 'https://placehold.co/1200x630.png';
+  let pageDescription = query ? `Find news articles matching "${query}". NewsFlash helps you discover relevant information.` : "Search for news articles on NewsFlash.";
+  let ogImageUrl: string | null = null;
   const canonicalUrl = query ? `/search?q=${encodeURIComponent(query)}` : "/search";
-  const previousImages = (await parent).openGraph?.images || [];
+  
+  if (query) {
+    try {
+      const newsResponse = await searchNews(query, 1, 1);
+      if (newsResponse.status === 'ok' && newsResponse.articles && newsResponse.articles.length > 0) {
+        if (newsResponse.articles[0].urlToImage) {
+          ogImageUrl = newsResponse.articles[0].urlToImage;
+        }
+      }
+    } catch (error) {
+      console.error(`Error fetching search results for "${query}" metadata:`, error);
+    }
+  }
 
+  const previousImages = (await parent).openGraph?.images || [];
 
   return {
     title: pageTitle,
@@ -31,15 +45,7 @@ export async function generateMetadata(
       title: pageTitle,
       description: pageDescription,
       url: canonicalUrl,
-      images: ogImageUrl ? [
-        {
-          url: ogImageUrl,
-          width: 1200,
-          height: 630,
-          alt: pageTitle,
-        },
-         ...previousImages.filter(img => typeof img === 'string' ? img !== ogImageUrl : img.url !== ogImageUrl),
-      ] : previousImages,
+      images: ogImageUrl ? [ogImageUrl] : previousImages,
     },
     twitter: {
       card: 'summary_large_image',

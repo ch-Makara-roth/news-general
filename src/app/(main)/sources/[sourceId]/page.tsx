@@ -21,11 +21,11 @@ export async function generateMetadata(
 
   let pageTitle = `News from ${sourceName}`;
   let pageDescription = `Read the latest articles and headlines from ${sourceName}. Your trusted source on NewsFlash.`;
-  let ogImageUrl = 'https://placehold.co/1200x630.png';
+  let ogImageUrl: string | null = null;
   const canonicalUrl = `/sources/${sourceId}`;
 
   try {
-    const newsResponse = await getSourceNews(sourceId, 1, 2);
+    const newsResponse = await getSourceNews(sourceId, 1, 1);
     if (newsResponse.status === 'ok' && newsResponse.articles && newsResponse.articles.length > 0) {
       const firstArticle = newsResponse.articles[0];
       pageDescription = `Get the latest news from ${sourceName}, featuring articles like "${firstArticle.title}". Stay informed with NewsFlash.`;
@@ -49,15 +49,7 @@ export async function generateMetadata(
       title: pageTitle,
       description: pageDescription,
       url: canonicalUrl,
-      images: ogImageUrl ? [
-        {
-          url: ogImageUrl,
-          width: 1200,
-          height: 630,
-          alt: pageTitle,
-        },
-        ...previousImages.filter(img => typeof img === 'string' ? img !== ogImageUrl : img.url !== ogImageUrl),
-      ] : previousImages,
+      images: ogImageUrl ? [ogImageUrl] : previousImages,
     },
     twitter: {
       card: 'summary_large_image',
