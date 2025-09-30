@@ -14,7 +14,9 @@ import Link from 'next/link';
 import { useToast } from '@/hooks/use-toast';
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Frown } from "lucide-react";
+import { Frown, Newspaper } from "lucide-react";
+import { summarizeNews } from '@/ai/flows/summarizeContent';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const PAGE_SIZE = 12;
 
@@ -29,6 +31,8 @@ export default function SourcePageClientContent({ sourceId }: SourcePageClientCo
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [newsResponse, setNewsResponse] = useState<NewsApiResponse | undefined>(undefined);
   const [loading, setLoading] = useState(true);
+  const [summary, setSummary] = useState<string>('');
+  const [summaryLoading, setSummaryLoading] = useState(true);
   const { toast } = useToast();
 
   const moreLikeThisModalRef = useRef<MoreLikeThisModalRef>(null);
@@ -41,11 +45,13 @@ export default function SourcePageClientContent({ sourceId }: SourcePageClientCo
 
   useEffect(() => {
     async function fetchData() {
-      if (!sourceId || !currentSource) { // Check currentSource here too
-        setLoading(false); // Stop loading if source is invalid
+      if (!sourceId || !currentSource) {
+        setLoading(false);
+        setSummaryLoading(false);
         return;
       }
       setLoading(true);
+      setSummaryLoading(true);
       try {
         const response = await getSourceNews(sourceId, currentPage, PAGE_SIZE);
         if (response.status === 'error') {
@@ -56,6 +62,13 @@ export default function SourcePageClientContent({ sourceId }: SourcePageClientCo
           });
         }
         setNewsResponse(response);
+
+        if (currentPage === 1 && response.status === 'ok' && response.articles && response.articles.length > 0) {
+          const titles = response.articles.map(a => a.title);
+          const topic = `News from ${currentSource.name}`;
+          summarizeNews(topic, titles).then(setSummary);
+        }
+
       } catch (error) {
         console.error(`Failed to fetch news from ${sourceId}:`, error);
         const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
@@ -65,11 +78,13 @@ export default function SourcePageClientContent({ sourceId }: SourcePageClientCo
           description: `Failed to load news: ${errorMessage}`,
           variant: "destructive",
         });
+      } finally {
+        setLoading(false);
+        setSummaryLoading(false);
       }
-      setLoading(false);
     }
     fetchData();
-  }, [sourceId, currentPage, currentSource, toast]); // Added currentSource to dependencies
+  }, [sourceId, currentPage, currentSource, toast]);
 
 
   const totalArticles = newsResponse?.totalResults || 0;
@@ -97,16 +112,28 @@ export default function SourcePageClientContent({ sourceId }: SourcePageClientCo
     );
   }
 
-  // Render skeleton or loading state if currentSource is valid but data is still fetching
-  if (loading && currentSource) {
-    return <NewsList response={undefined} loading={true} />
-  }
-
   return (
     <div>
       <h2 className="text-3xl font-headline font-semibold mb-4">
         News from <span className="text-primary">{currentSource?.name || "Source"}</span>
       </h2>
+
+      {currentPage === 1 && (
+        <div className="mb-6 p-4 bg-muted/50 rounded-lg border">
+          {summaryLoading ? (
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4" />
+            </div>
+          ) : summary ? (
+            <p className="text-sm text-muted-foreground italic">
+              <Newspaper className="inline-block h-4 w-4 mr-2" />
+              {summary}
+            </p>
+          ) : null}
+        </div>
+      )}
       
       <Tabs defaultValue={sourceId} className="mb-6">
         <ScrollArea className="w-full whitespace-nowrap rounded-md">
