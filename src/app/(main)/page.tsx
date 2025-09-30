@@ -7,10 +7,10 @@ import { getTopHeadlines } from '@/actions/newsActions';
 import HomePageSkeleton from '@/components/skeletons/HomePageSkeleton';
 
 export async function generateMetadata(
-  { searchParams = {} }: { searchParams?: { [key: string]: string | string[] | undefined } },
+  { searchParams }: { searchParams?: { [key: string]: string | string[] | undefined } },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const countryParam = searchParams.country;
+  const countryParam = searchParams?.country;
   const countryCode = (Array.isArray(countryParam) ? countryParam[0] : countryParam) || COUNTRIES[0].code;
   const country = COUNTRIES.find(c => c.code === countryCode);
   const countryName = country ? country.name : "Worldwide";
@@ -21,7 +21,7 @@ export async function generateMetadata(
   let finalOgImageUrl: string | URL | null = null; 
   let finalOgImageAlt = pageTitle; 
 
-  const canonicalPath = countryCode === COUNTRIES[0].code ? '/' : `/?country=${countryCode}`;
+  const canonicalPath = !countryParam || countryCode === COUNTRIES[0].code ? '/' : `/?country=${countryCode}`;
 
   try {
     const newsResponse = await getTopHeadlines(countryCode, 1, 1); 
