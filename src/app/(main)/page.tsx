@@ -17,6 +17,7 @@ export async function generateMetadata(
 
   let pageTitle = `Top Headlines from ${countryName} - NewsFlash`;
   let pageDescription = `Discover the latest top news headlines from ${countryName}. Stay informed with NewsFlash.`;
+  let keywords = ['top headlines', 'breaking news', countryName.toLowerCase(), 'daily news'];
   
   let finalOgImageUrl: string | URL | null = null; 
   let finalOgImageAlt = pageTitle; 
@@ -28,6 +29,9 @@ export async function generateMetadata(
     if (newsResponse.status === 'ok' && newsResponse.articles && newsResponse.articles.length > 0) {
       const firstArticle = newsResponse.articles[0];
       pageDescription = `Top stories from ${countryName} including "${firstArticle.title}". Get your daily news fix with NewsFlash.`;
+      if (firstArticle.title) {
+        keywords.push(...firstArticle.title.split(' ').slice(0, 5)); // Add first few words from title as keywords
+      }
       if (firstArticle.urlToImage) {
         finalOgImageUrl = firstArticle.urlToImage; 
         finalOgImageAlt = firstArticle.title || pageTitle; 
@@ -39,10 +43,12 @@ export async function generateMetadata(
 
   const previousImages = (await parent).openGraph?.images || [];
   const openGraphImages = finalOgImageUrl ? [{ url: finalOgImageUrl, alt: finalOgImageAlt, width: 1200, height: 630 }] : previousImages;
+  const parentKeywords = (await parent).keywords || [];
 
   return {
     title: pageTitle,
     description: pageDescription,
+    keywords: Array.from(new Set([...keywords, ...parentKeywords])),
     alternates: {
       canonical: canonicalPath,
     },

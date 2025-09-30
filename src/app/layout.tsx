@@ -18,6 +18,7 @@ export const metadata: Metadata = {
     template: `%s - ${siteName}`,
   },
   description: siteDescription,
+  keywords: ['news', 'headlines', 'world news', 'local news', 'breaking news', 'daily news', 'NewsFlash'],
   openGraph: {
     title: {
       default: `${siteName} - Your Daily News`,

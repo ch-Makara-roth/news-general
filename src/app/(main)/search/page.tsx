@@ -17,6 +17,10 @@ export async function generateMetadata(
 
   const pageTitle = query ? `Search Results for "${query}"` : "Search News";
   let pageDescription = query ? `Find news articles matching "${query}". NewsFlash helps you discover relevant information.` : "Search for news articles on NewsFlash.";
+  let keywords = ['search', 'news search'];
+  if (query) {
+    keywords.push(query);
+  }
   let ogImageUrl: string | null = null;
   const canonicalUrl = query ? `/search?q=${encodeURIComponent(query)}` : "/search";
   
@@ -35,10 +39,12 @@ export async function generateMetadata(
 
   const previousImages = (await parent).openGraph?.images || [];
   const openGraphImages = ogImageUrl ? [ogImageUrl] : previousImages;
+  const parentKeywords = (await parent).keywords || [];
 
   return {
     title: pageTitle,
     description: pageDescription,
+    keywords: Array.from(new Set([...keywords, ...parentKeywords])),
     alternates: {
       canonical: canonicalUrl,
     },

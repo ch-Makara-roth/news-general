@@ -21,6 +21,7 @@ export async function generateMetadata(
 
   let pageTitle = `Top Headlines from ${countryName}`;
   let pageDescription = `Get the latest top news headlines from ${countryName}. Stay updated with NewsFlash.`;
+  let keywords = ['top headlines', countryName.toLowerCase(), 'news', countryCode];
   let ogImageUrl: string | null = null;
   const canonicalUrl = `/country/${countryCode}`;
 
@@ -39,10 +40,12 @@ export async function generateMetadata(
   
   const previousImages = (await parent).openGraph?.images || [];
   const openGraphImages = ogImageUrl ? [ogImageUrl] : previousImages;
+  const parentKeywords = (await parent).keywords || [];
 
   return {
     title: pageTitle,
     description: pageDescription,
+    keywords: Array.from(new Set([...keywords, ...parentKeywords])),
     alternates: {
       canonical: canonicalUrl,
     },
