@@ -77,4 +77,3 @@ export default function NewsList({ response, loading, moreLikeThisModalRef }: Ne
     </div>
   );
 }
-
