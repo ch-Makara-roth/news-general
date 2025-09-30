@@ -18,7 +18,7 @@ export async function generateMetadata(
   let pageTitle = `Top Headlines from ${countryName} - NewsFlash`;
   let pageDescription = `Discover the latest top news headlines from ${countryName}. Stay informed with NewsFlash.`;
   
-  let finalOgImageUrl: string | URL = '/og-image.png'; 
+  let finalOgImageUrl: string | URL | null = null; 
   let finalOgImageAlt = pageTitle; 
 
   const canonicalPath = countryCode === COUNTRIES[0].code ? '/' : `/?country=${countryCode}`;
@@ -37,6 +37,9 @@ export async function generateMetadata(
     console.error(`Error fetching headlines for ${countryName} (homepage metadata):`, error);
   }
 
+  const previousImages = (await parent).openGraph?.images || [];
+  const openGraphImages = finalOgImageUrl ? [{ url: finalOgImageUrl, alt: finalOgImageAlt, width: 1200, height: 630 }] : previousImages;
+
   return {
     title: pageTitle,
     description: pageDescription,
@@ -47,20 +50,13 @@ export async function generateMetadata(
       title: pageTitle,
       description: pageDescription,
       url: canonicalPath,
-      images: [ 
-        {
-          url: finalOgImageUrl, 
-          width: 1200,
-          height: 630,
-          alt: finalOgImageAlt,
-        },
-      ],
+      images: openGraphImages,
     },
     twitter: {
       card: 'summary_large_image',
       title: pageTitle,
       description: pageDescription,
-      images: [finalOgImageUrl.toString()], 
+      images: openGraphImages.map(img => (typeof img === 'string' ? img : img.url)), 
     },
   };
 }

@@ -38,6 +38,7 @@ export async function generateMetadata(
   }
   
   const previousImages = (await parent).openGraph?.images || [];
+  const openGraphImages = ogImageUrl ? [ogImageUrl] : previousImages;
 
   return {
     title: pageTitle,
@@ -49,13 +50,13 @@ export async function generateMetadata(
       title: pageTitle,
       description: pageDescription,
       url: canonicalUrl,
-      images: ogImageUrl ? [ogImageUrl] : previousImages,
+      images: openGraphImages,
     },
     twitter: {
       card: 'summary_large_image',
       title: pageTitle,
       description: pageDescription,
-      images: ogImageUrl ? [ogImageUrl] : previousImages.map(img => typeof img === 'string' ? img : (img.url as string)),
+      images: openGraphImages.map(img => typeof img === 'string' ? img : (img.url as string)),
     },
   };
 }
