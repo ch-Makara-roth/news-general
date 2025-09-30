@@ -8,7 +8,7 @@ import { Analytics } from '@vercel/analytics/react';
 
 const siteName = 'NewsFlash';
 const siteDescription = 'Stay updated with the latest news from around the world with NewsFlash.';
-const siteUrl = 'https://news-general.vercel.app'; // Updated site URL
+const siteUrl = 'https://news-general.vercel.app'; 
 const ogImageUrl = `${siteUrl}/og-image.png`;
 
 export const metadata: Metadata = {
