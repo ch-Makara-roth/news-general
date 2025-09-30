@@ -7,6 +7,7 @@ const baseUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://news-general.verce
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const currentDate = new Date().toISOString();
 
+  // Static pages that are always present
   const staticRoutes = [
     {
       url: baseUrl,
@@ -22,6 +23,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
+  // Dynamically generated pages from constants
   const categoryRoutes = CATEGORIES.map((category) => ({
     url: `${baseUrl}/categories/${category.id}`,
     lastModified: currentDate,
@@ -43,6 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
+  // Combine all routes into a single sitemap
   return [
     ...staticRoutes,
     ...categoryRoutes,
